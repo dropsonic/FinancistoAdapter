@@ -73,6 +73,7 @@ namespace FinancistoAdapter
 			var attributeValues =
 				entities
 					.OfType<TransactionAttribute>()
+					.Where(a => a.Attribute != null) // workaround for inconsistent data
 					.ToArray();
 
 			// "За всех" attribute
