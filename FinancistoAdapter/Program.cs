@@ -121,7 +121,7 @@ namespace FinancistoAdapter
 							csv.WriteField(tran.Payee?.Title);
 							csv.WriteField(tran.Project?.Title);
 							csv.WriteField(tran.Note);
-							csv.WriteField(sharedExpenseMap.TryGetValue(tran, out bool value) ? value : false);
+							csv.WriteField(sharedExpenseMap.TryGetValue(tran, out bool value) && value);
 							csv.NextRecord();
 						}
 					}
