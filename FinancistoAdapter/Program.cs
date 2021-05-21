@@ -97,10 +97,8 @@ namespace FinancistoAdapter
 			{
 				using (StreamWriter writer = new StreamWriter(file, Encoding.UTF8))
 				{
-					using (var csv = new CsvWriter(writer))
+					using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
 					{
-						csv.Configuration.CultureInfo = CultureInfo.InvariantCulture;
-
 						//csv.WriteExcelSeparator();
 						csv.WriteField("Date&Time");
 						csv.WriteField("Account");
