@@ -21,6 +21,11 @@ namespace FinancistoAdapter.Entities
 		public DateTime? DateTime { get; set; }
 		[EntityProperty("from_amount", Converter = typeof (AmountConverter))]
 		public double? FromAmount { get; set; }
+		// Amount in the original currency that may not match the currency of the account
+		[EntityProperty("original_from_amount", Converter = typeof (AmountConverter))]
+		public double? OriginalFromAmount { get; set; }
+		[EntityProperty("original_currency_id")]
+		public Currency OriginalCurrency { get; set; }
 		[EntityProperty("to_amount", Converter = typeof(AmountConverter))]
 		public double? ToAmount { get; set; }
 		[EntityProperty("payee_id")]
