@@ -104,6 +104,7 @@ namespace FinancistoAdapter
 						//csv.WriteExcelSeparator();
 						csv.WriteField("Date&Time");
 						csv.WriteField("Account");
+						csv.WriteField("Currency");
 						csv.WriteField("Amount");
 						csv.WriteField("Category");
 						csv.WriteField("Payee");
@@ -116,6 +117,7 @@ namespace FinancistoAdapter
 						{
 							csv.WriteField(tran.DateTime);
 							csv.WriteField(tran.From?.Title);
+							csv.WriteField(tran.From.Currency.Name);
 							csv.WriteField(tran.FromAmount?.ToString("0.00"));
 							csv.WriteField(tran.Category?.Title);
 							csv.WriteField(tran.Payee?.Title);
