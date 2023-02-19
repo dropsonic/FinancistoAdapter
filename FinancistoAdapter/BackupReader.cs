@@ -35,8 +35,8 @@ namespace FinancistoAdapter
 	{
 		private readonly FileStream _file;
 		private readonly GZipStream _zipStream;
-		private TextReader _reader;
-		private long _startPos = 0;
+		private readonly TextReader _reader;
+		private bool _readToEnd = false;
 
 		private string _package;
 		private int _versionCode;
@@ -80,20 +80,21 @@ namespace FinancistoAdapter
 						break;
 				}
 			}
-
-			_startPos = _file.Position;
 		}
 
 		public IEnumerable<string> GetLines()
 		{
-			_file.Seek(_startPos, SeekOrigin.Begin);
-			_reader = new StreamReader(_zipStream);
+			if (_readToEnd)
+				throw new InvalidOperationException("The backup has already been read to end.");
+			
 			string line;
 			while ((line = _reader.ReadLine()) != null && line != "#END")
 			{
 				if (!String.IsNullOrEmpty(line))
 					yield return line;
-}
+			}
+
+			_readToEnd = true;
 		}
 
 		public void Dispose()
