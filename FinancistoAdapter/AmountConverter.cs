@@ -1,11 +1,10 @@
-﻿namespace FinancistoAdapter
+﻿namespace FinancistoAdapter;
+
+public class AmountConverter : CustomConverter
 {
-	public class AmountConverter : CustomConverter
+	protected override object PerformConversion(string value)
 	{
-		protected override object PerformConversion(string value)
-		{
-			double d = double.Parse(value);
-			return d / 100;
-		}
+		double d = double.Parse(value);
+		return d / 100;
 	}
 }

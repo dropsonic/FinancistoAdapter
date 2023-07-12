@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace FinancistoAdapter
+namespace FinancistoAdapter;
+
+public interface IPropertyConverter
 {
-	public interface IPropertyConverter
-	{
-		Type PropertyType { get; set; }
-		object Convert(object value);
-	}
+	Type PropertyType { get; set; }
+	object Convert(object value);
 }

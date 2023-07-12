@@ -1,9 +1,8 @@
-﻿namespace FinancistoAdapter.Entities
+﻿namespace FinancistoAdapter.Entities;
+
+[Record("payee")]
+public class Payee : Entity
 {
-	[Record("payee")]
-	public class Payee : Entity
-	{
-		[RecordProperty("last_category_id")]
-		public Category LastCategory { get; set; }
-	}
+	[RecordProperty("last_category_id")]
+	public Category LastCategory { get; set; }
 }

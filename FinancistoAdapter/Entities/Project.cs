@@ -1,7 +1,6 @@
-﻿namespace FinancistoAdapter.Entities
+﻿namespace FinancistoAdapter.Entities;
+
+[Record("project")]
+public class Project : Entity
 {
-	[Record("project")]
-	public class Project : Entity
-	{
-	}
 }

@@ -1,17 +1,16 @@
 ﻿using System;
 
-namespace FinancistoAdapter
+namespace FinancistoAdapter;
+
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+public class RecordAttribute : Attribute
 {
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-	public class RecordAttribute : Attribute
+	public string Name { get; private set; }
+	public RecordAttribute(string name)
 	{
-		public string Name { get; private set; }
-		public RecordAttribute(string name)
-		{
-			if (String.IsNullOrEmpty(name)) 
-				throw new ArgumentException("Record name cannot be null or empty.", nameof(name));
+		if (String.IsNullOrEmpty(name)) 
+			throw new ArgumentException("Record name cannot be null or empty.", nameof(name));
 			
-			Name = name;
-		}
+		Name = name;
 	}
 }

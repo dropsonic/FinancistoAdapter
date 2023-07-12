@@ -1,11 +1,10 @@
 ﻿using System.Diagnostics;
 
-namespace FinancistoAdapter.Entities
+namespace FinancistoAdapter.Entities;
+
+[Record("attributes")]
+public class AttributeDefinition : Entity
 {
-	[Record("attributes")]
-	public class AttributeDefinition : Entity
-	{
-		[RecordProperty("default_value")]
-		public string DefaultValue { get; set; }
-	}
+	[RecordProperty("default_value")]
+	public string DefaultValue { get; set; }
 }
