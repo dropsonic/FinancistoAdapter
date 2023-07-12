@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FinancistoAdapter
 {
@@ -11,13 +7,12 @@ namespace FinancistoAdapter
 		public object Convert(object value)
 		{
 			Type type = Nullable.GetUnderlyingType(PropertyType) ?? PropertyType;
-			if (type == typeof (bool) && value is string)
+			if (type == typeof (bool) && value is string str)
 			{
-				bool result;
-				if (bool.TryParse((string) value, out result))
+				if (bool.TryParse(str, out var result))
 					return result;
-				int i;
-				if (int.TryParse((string) value, out i))
+				
+				if (int.TryParse(str, out var i))
 					return System.Convert.ToBoolean(i);
 			}
 			return System.Convert.ChangeType(value, type);

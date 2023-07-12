@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FinancistoAdapter
 {
@@ -12,7 +8,9 @@ namespace FinancistoAdapter
 		public string EntityName { get; private set; }
 		public EntityAttribute(string entityName)
 		{
-			if (String.IsNullOrEmpty(entityName)) throw new ArgumentException("Entity name cannot be null or empty.", "key");
+			if (String.IsNullOrEmpty(entityName)) 
+				throw new ArgumentException("Entity name cannot be null or empty.", nameof(entityName));
+			
 			EntityName = entityName;
 		}
 	}

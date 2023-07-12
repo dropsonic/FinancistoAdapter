@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FinancistoAdapter
 {
@@ -14,10 +11,10 @@ namespace FinancistoAdapter
 		{
 			if (!String.IsNullOrEmpty(rawLine))
 			{
-				string[] splitted = rawLine.Split(new[] {':'}, 2);
-				Key = splitted[0];
-				if (splitted.Length > 1) 
-					Value = splitted[1];
+				string[] split = rawLine.Split(new[] {':'}, 2);
+				Key = split[0];
+				if (split.Length > 1) 
+					Value = split[1];
 			}
 		}
 
@@ -36,21 +33,21 @@ namespace FinancistoAdapter
 		private readonly FileStream _file;
 		private readonly GZipStream _zipStream;
 		private readonly TextReader _reader;
-		private bool _readToEnd = false;
+		private bool _readToEnd;
 
 		private string _package;
 		private int _versionCode;
 		private Version _version;
 		private int _dbVersion;
 
-		public string Package { get { return _package; } }
-		public int VersionCode { get { return _versionCode; } }
-		public Version Version { get { return _version; } }
-		public int DatabaseVersion { get { return _dbVersion; } }
+		public string Package => _package;
+		public int VersionCode => _versionCode;
+		public Version Version => _version;
+		public int DatabaseVersion => _dbVersion;
 
 		public BackupReader(string fileName)
 		{
-			if (String.IsNullOrEmpty(fileName)) throw new ArgumentException("File name cannot be null or empty.", "fileName");
+			if (String.IsNullOrEmpty(fileName)) throw new ArgumentException("File name cannot be null or empty.", nameof(fileName));
 			_file = File.OpenRead(fileName);
 			_zipStream = new GZipStream(_file, CompressionMode.Decompress);
 			_reader = new StreamReader(_zipStream);
@@ -60,8 +57,7 @@ namespace FinancistoAdapter
 
 		private void ReadHeader()
 		{
-			string rawLine;
-			while ((rawLine = _reader.ReadLine()) != null && !String.Equals(rawLine, "#START"))
+			while (_reader.ReadLine() is { } rawLine && !String.Equals(rawLine, "#START"))
 			{
 				Line line = new Line(rawLine);
 				switch (line.Key)
@@ -86,9 +82,8 @@ namespace FinancistoAdapter
 		{
 			if (_readToEnd)
 				throw new InvalidOperationException("The backup has already been read to end.");
-			
-			string line;
-			while ((line = _reader.ReadLine()) != null && line != "#END")
+
+			while (_reader.ReadLine() is { } line && line != "#END")
 			{
 				if (!String.IsNullOrEmpty(line))
 					yield return line;

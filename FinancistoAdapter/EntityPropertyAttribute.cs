@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Odbc;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FinancistoAdapter.Entities;
 
 namespace FinancistoAdapter
 {
@@ -15,25 +9,22 @@ namespace FinancistoAdapter
 
 		public string Key { get; private set; }
 
-		public static Type DefaultConverter
-		{
-			get { return typeof (DefaultConverter); }
-		}
+		public static Type DefaultConverter => typeof (DefaultConverter);
 
 		public Type Converter
 		{
-			get { return _converter; }
+			get => _converter;
 			set
 			{
 				if (value != null && !typeof(IPropertyConverter).IsAssignableFrom(value))
-					throw new ArgumentException("Converter type must implement IPropertyConverter.", "value");
+					throw new ArgumentException("Converter type must implement IPropertyConverter.", nameof(value));
 				_converter = value;
 			}
 		}
 
 		public EntityPropertyAttribute(string key)
 		{
-			if (String.IsNullOrEmpty(key)) throw new ArgumentException("Key cannot be null or empty.", "key");
+			if (String.IsNullOrEmpty(key)) throw new ArgumentException("Key cannot be null or empty.", nameof(key));
 			Key = key;
 		}
 	}

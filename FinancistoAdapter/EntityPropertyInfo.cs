@@ -8,7 +8,7 @@ namespace FinancistoAdapter
 	{
 		private delegate void SetValueDelegate(object entity, object value);
 
-		private SetValueDelegate _delegate;
+		private readonly SetValueDelegate _delegate;
 
 		public EntityPropertyInfo(PropertyInfo info)
 		{

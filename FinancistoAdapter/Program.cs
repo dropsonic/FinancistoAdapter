@@ -10,20 +10,11 @@ using FinancistoAdapter;
 using FinancistoAdapter.Entities;
 
 string fileName = null;
-string outputFileName = null;
+string outputFileName;
 string arg = args.Length > 0 && args[0] != null ? args[0] : Environment.CurrentDirectory;
 if (arg != null)
 {
-	if (File.GetAttributes(arg).HasFlag(FileAttributes.Directory))
-	{
-		fileName = Directory.EnumerateFiles(arg, "*.backup")
-			.OrderByDescending(Path.GetFileNameWithoutExtension)
-			.FirstOrDefault();
-	}
-	else
-	{
-		fileName = arg;
-	}
+	fileName = File.GetAttributes(arg).HasFlag(FileAttributes.Directory) ? Directory.EnumerateFiles(arg, "*.backup").MaxBy(Path.GetFileNameWithoutExtension) : arg;
 }
 
 if (String.IsNullOrEmpty(fileName) || !File.Exists(fileName))
@@ -43,6 +34,7 @@ var transactions =
 		.Where(t => t.Category != Category.Split)
 		.OrderBy(t => t.DateTime)
 		.ToArray();
+// ReSharper disable UnusedVariable
 var payees =
 	entities
 		.OfType<Payee>()
@@ -59,6 +51,7 @@ var attributes =
 	entities
 		.OfType<AttributeDefinition>()
 		.ToArray();
+// ReSharper restore UnusedVariable
 var attributeValues =
 	entities
 		.OfType<TransactionAttribute>()
@@ -106,7 +99,7 @@ using (FileStream file = File.Create(outputFileName))
 			{
 				csv.WriteField(tran.DateTime);
 				csv.WriteField(tran.From?.Title);
-				csv.WriteField(tran.From.Currency.Name);
+				csv.WriteField(tran.From?.Currency.Name);
 				csv.WriteField(tran.FromAmount?.ToString("0.00"));
 				csv.WriteField(tran.Category?.Title);
 				csv.WriteField(tran.Payee?.Title);

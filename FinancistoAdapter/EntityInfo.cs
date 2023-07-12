@@ -10,7 +10,7 @@ namespace FinancistoAdapter
 			Properties = new Dictionary<string, EntityPropertyInfo>();
 		}
 
-		public Type EntityType { get; set; }
-		public IDictionary<string, EntityPropertyInfo> Properties { get; private set; }
+		public Type EntityType { get; init; }
+		public IDictionary<string, EntityPropertyInfo> Properties { get; }
 	}
 }
