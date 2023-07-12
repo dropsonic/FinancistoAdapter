@@ -3,7 +3,7 @@
 namespace FinancistoAdapter
 {
 	[AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
-	public class EntityPropertyAttribute : Attribute
+	public class RecordPropertyAttribute : Attribute
 	{
 		private Type _converter = DefaultConverter;
 
@@ -22,7 +22,7 @@ namespace FinancistoAdapter
 			}
 		}
 
-		public EntityPropertyAttribute(string key)
+		public RecordPropertyAttribute(string key)
 		{
 			if (String.IsNullOrEmpty(key)) throw new ArgumentException("Key cannot be null or empty.", nameof(key));
 			Key = key;

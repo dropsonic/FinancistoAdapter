@@ -1,33 +1,32 @@
-﻿using System.Diagnostics;
-
-namespace FinancistoAdapter.Entities
+﻿namespace FinancistoAdapter.Entities
 {
-	[DebuggerDisplay("{Title}")]
-	[Entity("category")]
+	[Record("category")]
 	public class Category : Entity
 	{
 		private class SplitCategory : Category
 		{
 			public override int Id
 			{
-				get { return -1; } 
+				get => -1;
 				set { }
 			}
 
 			public override string Title 
 			{ 
-				get { return "Split"; }
+				get => "Split";
 				set { } 
 			}
 		}
 
-		private static readonly Category _split = new SplitCategory();
-		public static Category Split
-		{
-			get { return _split; }
-		}
+		public static Category Split { get; } = new SplitCategory();
+		
+		[RecordProperty("type")]
+		public CategoryType Type { get; set; }
+	}
 
-		[EntityProperty("title")]
-		public virtual string Title { get; set; }
+	public enum CategoryType
+	{
+		Expense = 0,
+		Income = 1
 	}
 }

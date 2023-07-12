@@ -1,12 +1,7 @@
-﻿using System.Diagnostics;
-
-namespace FinancistoAdapter.Entities
+﻿namespace FinancistoAdapter.Entities
 {
-	[DebuggerDisplay("{Title}")]
-	[Entity("project")]
+	[Record("project")]
 	public class Project : Entity
 	{
-		[EntityProperty("title")]
-		public string Title { get; set; }
 	}
 }

@@ -1,8 +1,14 @@
-﻿namespace FinancistoAdapter.Entities
+﻿using System.Diagnostics;
+
+namespace FinancistoAdapter.Entities
 {
-	public abstract class Entity
+	[DebuggerDisplay("{Title}")]
+	public abstract class Entity : Record
 	{
-		[EntityProperty("_id")]
-		public virtual int Id { get; set; }
+		[RecordProperty("title")]
+		public virtual string Title { get; set; }
+		
+		[RecordProperty("is_active")]
+		public virtual bool IsActive { get; set; }
 	}
 }

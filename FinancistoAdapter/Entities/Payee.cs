@@ -1,12 +1,9 @@
-﻿using System.Diagnostics;
-
-namespace FinancistoAdapter.Entities
+﻿namespace FinancistoAdapter.Entities
 {
-	[DebuggerDisplay("{Title}")]
-	[Entity("payee")]
+	[Record("payee")]
 	public class Payee : Entity
 	{
-		[EntityProperty("title")]
-		public string Title { get; set; }
+		[RecordProperty("last_category_id")]
+		public Category LastCategory { get; set; }
 	}
 }

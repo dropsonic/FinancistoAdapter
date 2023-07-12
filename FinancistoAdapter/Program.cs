@@ -24,7 +24,7 @@ if (args.Length > 1 && args[1] != null)
 else
 	outputFileName = Path.ChangeExtension(fileName, "csv");
 
-var entities = EntityReader.GetEntities(fileName).ToArray();
+var entities = RecordReader.GetRecords(fileName).ToArray();
 
 var transactions =
 	entities
@@ -35,6 +35,14 @@ var transactions =
 		.OrderBy(t => t.DateTime)
 		.ToArray();
 // ReSharper disable UnusedVariable
+var accounts =
+	entities
+		.OfType<Account>()
+		.ToArray();
+var currencies =
+	entities
+		.OfType<Currency>()
+		.ToArray();
 var payees =
 	entities
 		.OfType<Payee>()

@@ -1,33 +1,56 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace FinancistoAdapter.Entities
 {
-	[DebuggerDisplay("{Title}")]
-	[Entity("account")]
+	[Record("account")]
 	public class Account : Entity
 	{
-		[EntityProperty("title")]
-		public string Title { get; set; }
-		[EntityProperty("creation_date", Converter = typeof (DateTimeConverter))]
-		public DateTime? CreationDate { get; set; }
-		[EntityProperty("currency_id")]
-		public Currency Currency { get; set; }
-		[EntityProperty("total_amount", Converter = typeof (AmountConverter))]
-		public double? TotalAmount { get; set; }
-		[EntityProperty("type")]
-		public string Type { get; set; }
-		[EntityProperty("issuer")]
-		public string Issuer { get; set; }
-		[EntityProperty("is_active")]
-		public bool IsActive { get; set; }
-		[EntityProperty("is_include_into_totals")]
-		public bool IsIncludeIntoTotals { get; set; }
-		[EntityProperty("card_issuer")]
-		public string CardIssuer { get; set; }
-		[EntityProperty("updated_on", Converter = typeof(DateTimeConverter))]
-		public DateTime? UpdatedOn { get; set; }
-		[EntityProperty("last_transaction_date", Converter = typeof(DateTimeConverter))]
+		[RecordProperty("creation_date", Converter = typeof (DateTimeConverter))]
+		public DateTime CreationDate { get; set; }
+		
+		[RecordProperty("last_transaction_date", Converter = typeof(DateTimeConverter))]
 		public DateTime? LastTransactionDate { get; set; }
+		
+		[RecordProperty("currency_id")]
+		public Currency Currency { get; set; }
+		
+		[RecordProperty("type")]
+		public string Type { get; set; }
+		
+		[RecordProperty("card_issuer")]
+		public string CardIssuer { get; set; }
+		
+		[RecordProperty("issuer")]
+		public string Issuer { get; set; }
+		
+		[RecordProperty("number")]
+		public string Number { get; set; }
+		
+		[RecordProperty("total_amount", Converter = typeof (AmountConverter))]
+		public double TotalAmount { get; set; }
+		
+		[RecordProperty("total_limit", Converter = typeof (AmountConverter))]
+		public double LimitAmount { get; set; }
+		
+		[RecordProperty("sort_order")]
+		public int SortOrder { get; set; }
+		
+		[RecordProperty("is_include_into_totals")]
+		public bool IncludeIntoTotals { get; set; }
+		
+		[RecordProperty("last_account_id")]
+		public Account LastAccount{ get; set; }
+		
+		[RecordProperty("last_category_id")]
+		public Category LastCategory { get; set; }
+		
+		[RecordProperty("closing_day")]
+		public int? ClosingDay { get; set; }
+		
+		[RecordProperty("payment_day")]
+		public int? PaymentDay { get; set; }
+		
+		[RecordProperty("note")]
+		public string Note { get; set; }
 	}
 }

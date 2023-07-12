@@ -4,13 +4,13 @@ using FinancistoAdapter.Entities;
 
 namespace FinancistoAdapter
 {
-	public class EntityPropertyInfo
+	public class RecordPropertyInfo
 	{
 		private delegate void SetValueDelegate(object entity, object value);
 
 		private readonly SetValueDelegate _delegate;
 
-		public EntityPropertyInfo(PropertyInfo info)
+		public RecordPropertyInfo(PropertyInfo info)
 		{
 			PropertyName = info.Name;
 			PropertyType = info.PropertyType;
@@ -21,7 +21,7 @@ namespace FinancistoAdapter
 
 		public Type PropertyType { get; private set; }
 
-		public void SetValue(Entity entity, object value)
+		public void SetValue(Record entity, object value)
 		{
 			object v = Converter.Convert(value);
 			_delegate(entity, v);

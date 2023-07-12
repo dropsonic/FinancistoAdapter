@@ -3,16 +3,16 @@
 namespace FinancistoAdapter.Entities
 {
 	[DebuggerDisplay("{Attribute.Title} = {Value} (TranId = {Transaction.Id})")]
-	[Entity("transaction_attribute")]
-	public class TransactionAttribute : Entity
+	[Record("transaction_attribute")]
+	public class TransactionAttribute : Record
 	{
-		[EntityProperty("transaction_id")]
+		[RecordProperty("transaction_id")]
 		public Transaction Transaction { get; set; }
 
-		[EntityProperty("attribute_id")]
+		[RecordProperty("attribute_id")]
 		public AttributeDefinition Attribute { get; set; }
 
-		[EntityProperty("value")]
+		[RecordProperty("value")]
 		public string Value { get; set; }
 	}
 }
