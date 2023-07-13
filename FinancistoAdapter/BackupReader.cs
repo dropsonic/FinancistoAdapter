@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Security.Cryptography.X509Certificates;
 
 namespace FinancistoAdapter;
 
@@ -30,9 +31,9 @@ public class Line
 
 public class BackupReader : IDisposable
 {
-	private readonly FileStream _file;
-	private readonly GZipStream _zipStream;
-	private readonly TextReader _reader;
+	private readonly Stream _stream;
+	private GZipStream _zipStream;
+	private TextReader _reader;
 	private bool _readToEnd;
 
 	private string _package;
@@ -45,14 +46,20 @@ public class BackupReader : IDisposable
 	public Version Version => _version;
 	public int DatabaseVersion => _dbVersion;
 
-	public BackupReader(string fileName)
+	public BackupReader(Stream stream)
 	{
-		if (String.IsNullOrEmpty(fileName)) throw new ArgumentException("File name cannot be null or empty.", nameof(fileName));
-		_file = File.OpenRead(fileName);
-		_zipStream = new GZipStream(_file, CompressionMode.Decompress);
-		_reader = new StreamReader(_zipStream);
-
+		_stream = stream;
+		Initialize();
 		ReadHeader();
+	}
+
+	private void Initialize()
+	{
+		_reader?.Dispose();
+		_zipStream?.Dispose();
+		
+		_zipStream = new GZipStream(_stream, CompressionMode.Decompress, leaveOpen: true);
+		_reader = new StreamReader(_zipStream, leaveOpen: true);
 	}
 
 	private void ReadHeader()
@@ -81,7 +88,19 @@ public class BackupReader : IDisposable
 	public IEnumerable<Line> ReadAll()
 	{
 		if (_readToEnd)
-			throw new InvalidOperationException("The backup has already been read to end.");
+		{
+			if (_stream.CanSeek)
+			{
+				_stream.Seek(0, SeekOrigin.Begin);
+				Initialize();
+				ReadHeader();
+				_readToEnd = false;
+			}
+			else
+			{
+				throw new InvalidOperationException("The backup has already been read to end.");
+			}
+		}
 
 		while (_reader.ReadLine() is { } line && line != "#END")
 		{
@@ -96,6 +115,5 @@ public class BackupReader : IDisposable
 	{
 		_reader.Dispose();
 		_zipStream.Dispose();
-		_file.Dispose();
 	}
 }

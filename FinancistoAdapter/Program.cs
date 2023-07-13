@@ -24,7 +24,11 @@ if (args.Length > 1 && args[1] != null)
 else
 	outputFileName = Path.ChangeExtension(fileName, "csv");
 
-using var reader = new BackupReader(fileName);
+if (String.IsNullOrEmpty(fileName)) 
+	throw new InvalidOperationException("File name cannot be null or empty.");
+
+using var fileStream = File.OpenRead(fileName);
+using var reader = new BackupReader(fileStream);
 var lines = reader.ReadAll();
 var entities = RecordReader.ReadRecords(lines).ToArray();
 
