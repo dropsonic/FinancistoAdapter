@@ -49,7 +49,7 @@ public static class RecordReader
 			
 		List<IRecord> entities = new();
 		var map = new Dictionary<Type, Dictionary<int, IRecord>>();
-		var foreignKeys = new List<Tuple<RecordPropertyInfo, Action<object>, int>>();
+		var foreignKeys = new List<(RecordPropertyInfo PropertyInfo, Action<object> SetValue, int Value)>();
 
 		var recordTypes = GetRecordTypes();
 		IRecord record = null;
@@ -83,7 +83,7 @@ public static class RecordReader
 					if (typeof(IRecord).IsAssignableFrom(property.PropertyType))
 					{
 						IRecord cRecord = record;
-						foreignKeys.Add(Tuple.Create(property, new Action<object>(v => property.SetValue(cRecord, v)), int.Parse(line.Value)));
+						foreignKeys.Add((property, v => property.SetValue(cRecord, v), int.Parse(line.Value)));
 					}
 					else
 						property.SetValue(record, line.Value);
@@ -91,18 +91,18 @@ public static class RecordReader
 			}
 		}
 
-		foreach (Tuple<RecordPropertyInfo, Action<object>, int> link in foreignKeys)
+		foreach (var link in foreignKeys)
 		{
-			if (map.TryGetValue(link.Item1.PropertyType, out var mapById) &&
-			    mapById.TryGetValue(link.Item3, out var linkedRecord))
+			if (map.TryGetValue(link.PropertyInfo.PropertyType, out var mapById) &&
+			    mapById.TryGetValue(link.Value, out var linkedRecord))
 			{
-				link.Item2(linkedRecord);
+				link.SetValue(linkedRecord);
 			}
-			else if (link.Item1.Converter.GetType() != RecordPropertyAttribute.DefaultConverter)
+			else if (link.PropertyInfo.Converter.GetType() != RecordPropertyAttribute.DefaultConverter)
 			{
 				try
 				{
-					link.Item2(link.Item3); // try to pass original ID to the converter
+					link.SetValue(link.Value); // try to pass original ID to the converter
 				}
 				catch (InvalidCastException)
 				{
