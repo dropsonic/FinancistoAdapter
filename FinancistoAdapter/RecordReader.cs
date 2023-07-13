@@ -43,10 +43,8 @@ public static class RecordReader
 		return new ReadOnlyDictionary<string, RecordInfo>(records);
 	}
 
-	public static IEnumerable<IRecord> GetRecords(string fileName)
+	public static IEnumerable<IRecord> ReadRecords(IEnumerable<Line> lines)
 	{
-		using var reader = new BackupReader(fileName);
-			
 		List<IRecord> entities = new();
 		var map = new Dictionary<Type, Dictionary<int, IRecord>>();
 		var foreignKeys = new List<(RecordPropertyInfo PropertyInfo, Action<object> SetValue, int Value)>();
@@ -55,7 +53,7 @@ public static class RecordReader
 		IRecord record = null;
 		RecordInfo recordInfo = null;
 
-		foreach (Line line in reader.GetLines().Select(s => new Line(s)))
+		foreach (Line line in lines)
 		{
 			if (line.Key == "$ENTITY")
 			{

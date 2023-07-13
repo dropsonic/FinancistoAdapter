@@ -24,7 +24,9 @@ if (args.Length > 1 && args[1] != null)
 else
 	outputFileName = Path.ChangeExtension(fileName, "csv");
 
-var entities = RecordReader.GetRecords(fileName).ToArray();
+using var reader = new BackupReader(fileName);
+var lines = reader.ReadAll();
+var entities = RecordReader.ReadRecords(lines).ToArray();
 
 var transactions =
 	entities

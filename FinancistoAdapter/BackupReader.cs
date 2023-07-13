@@ -78,7 +78,7 @@ public class BackupReader : IDisposable
 		}
 	}
 
-	public IEnumerable<string> GetLines()
+	public IEnumerable<Line> ReadAll()
 	{
 		if (_readToEnd)
 			throw new InvalidOperationException("The backup has already been read to end.");
@@ -86,7 +86,7 @@ public class BackupReader : IDisposable
 		while (_reader.ReadLine() is { } line && line != "#END")
 		{
 			if (!String.IsNullOrEmpty(line))
-				yield return line;
+				yield return new Line(line);
 		}
 
 		_readToEnd = true;
