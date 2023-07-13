@@ -9,7 +9,7 @@ public class RecordConverter : IPropertyConverter
 
 	public object Convert(object value)
 	{
-		if (value is Record) 
+		if (value is IRecord) 
 			return value;
 		return null;
 	}

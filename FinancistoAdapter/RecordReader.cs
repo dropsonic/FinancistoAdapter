@@ -11,7 +11,7 @@ public static class RecordReader
 {
 	private static IReadOnlyDictionary<string, RecordInfo> GetRecordTypes()
 	{
-		Type recordType = typeof(Record);
+		Type recordType = typeof(IRecord);
 		Dictionary<string, RecordInfo> records = new Dictionary<string, RecordInfo>();
 		IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()
 			.SelectMany(a => a.GetTypes())
@@ -43,16 +43,16 @@ public static class RecordReader
 		return new ReadOnlyDictionary<string, RecordInfo>(records);
 	}
 
-	public static IEnumerable<Record> GetRecords(string fileName)
+	public static IEnumerable<IRecord> GetRecords(string fileName)
 	{
 		using var reader = new BackupReader(fileName);
 			
-		List<Record> entities = new List<Record>();
-		var map = new Dictionary<Type, Dictionary<int, Record>>();
+		List<IRecord> entities = new();
+		var map = new Dictionary<Type, Dictionary<int, IRecord>>();
 		var foreignKeys = new List<Tuple<RecordPropertyInfo, Action<object>, int>>();
 
 		var recordTypes = GetRecordTypes();
-		Record record = null;
+		IRecord record = null;
 		RecordInfo recordInfo = null;
 
 		foreach (Line line in reader.GetLines().Select(s => new Line(s)))
@@ -60,14 +60,17 @@ public static class RecordReader
 			if (line.Key == "$ENTITY")
 			{
 				if (!String.IsNullOrEmpty(line.Value) && recordTypes.TryGetValue(line.Value, out recordInfo))
-					record = (Record)Activator.CreateInstance(recordInfo.RecordType);
+					record = (IRecord) Activator.CreateInstance(recordInfo.RecordType);
 			}
 			else if (line.Key == "$$" && record != null)
 			{
-				if (!map.ContainsKey(recordInfo!.RecordType))
-					map[recordInfo.RecordType] = new Dictionary<int, Record>();
-					
-				map[recordInfo.RecordType][record.Id] = record;
+				if (record is Record identifiableRecord)
+				{
+					if (!map.ContainsKey(recordInfo!.RecordType))
+						map[recordInfo.RecordType] = new Dictionary<int, IRecord>();
+
+					map[recordInfo.RecordType][identifiableRecord.Id] = record;
+				}
 
 				entities.Add(record);
 
@@ -77,9 +80,9 @@ public static class RecordReader
 			{
 				if (recordInfo!.Properties.TryGetValue(line.Key, out var property))
 				{
-					if (typeof(Record).IsAssignableFrom(property.PropertyType))
+					if (typeof(IRecord).IsAssignableFrom(property.PropertyType))
 					{
-						Record cRecord = record;
+						IRecord cRecord = record;
 						foreignKeys.Add(Tuple.Create(property, new Action<object>(v => property.SetValue(cRecord, v)), int.Parse(line.Value)));
 					}
 					else

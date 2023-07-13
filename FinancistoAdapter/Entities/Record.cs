@@ -2,7 +2,7 @@
 
 namespace FinancistoAdapter.Entities;
 
-public abstract class Record
+public abstract class Record : IRecord
 {
     [RecordProperty("_id")]
     public virtual int Id { get; set; }

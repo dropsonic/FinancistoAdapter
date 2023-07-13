@@ -6,7 +6,7 @@ namespace FinancistoAdapter;
 
 public class RecordPropertyInfo
 {
-	private delegate void SetValueDelegate(object entity, object value);
+	private delegate void SetValueDelegate(IRecord record, object value);
 
 	private readonly SetValueDelegate _delegate;
 
@@ -21,10 +21,10 @@ public class RecordPropertyInfo
 
 	public Type PropertyType { get; private set; }
 
-	public void SetValue(Record entity, object value)
+	public void SetValue(IRecord record, object value)
 	{
 		object v = Converter.Convert(value);
-		_delegate(entity, v);
+		_delegate(record, v);
 	}
 
 	public IPropertyConverter Converter { get; set; }

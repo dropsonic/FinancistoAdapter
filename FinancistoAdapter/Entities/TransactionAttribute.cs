@@ -4,7 +4,7 @@ namespace FinancistoAdapter.Entities;
 
 [DebuggerDisplay("{Attribute.Title} = {Value} (TranId = {Transaction.Id})")]
 [Record("transaction_attribute")]
-public class TransactionAttribute : Record
+public class TransactionAttribute : IRecord
 {
 	[RecordProperty("transaction_id")]
 	public Transaction Transaction { get; set; }
