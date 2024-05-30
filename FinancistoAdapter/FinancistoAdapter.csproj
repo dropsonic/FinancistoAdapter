@@ -5,7 +5,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyTitle>FinancistoAdapter</AssemblyTitle>
     <Product>FinancistoAdapter</Product>
-    <Copyright>Copyright ©  2016</Copyright>
+    <Copyright>Copyright © Vladimir Panchenko 2016-2024</Copyright>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
