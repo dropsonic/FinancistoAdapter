@@ -3,6 +3,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AssemblyTitle>FinancistoAdapter</AssemblyTitle>
     <Product>FinancistoAdapter</Product>
     <Copyright>Copyright © Vladimir Panchenko 2016-2024</Copyright>
