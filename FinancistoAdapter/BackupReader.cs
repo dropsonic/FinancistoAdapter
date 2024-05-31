@@ -38,12 +38,12 @@ public class BackupReader : IDisposable
 
 	private string _package;
 	private int _versionCode;
-	private Version _version;
+	private string _version;
 	private int _dbVersion;
 
 	public string Package => _package;
 	public int VersionCode => _versionCode;
-	public Version Version => _version;
+	public string Version => _version;
 	public int DatabaseVersion => _dbVersion;
 
 	public BackupReader(Stream stream)
@@ -76,7 +76,7 @@ public class BackupReader : IDisposable
 					_versionCode = int.Parse(line.Value);
 					break;
 				case "VERSION_NAME":
-					_version = Version.Parse(line.Value);
+					_version = line.Value;
 					break;
 				case "DATABASE_VERSION":
 					_dbVersion = int.Parse(line.Value);
