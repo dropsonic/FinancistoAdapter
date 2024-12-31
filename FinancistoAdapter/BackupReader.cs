@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Security.Cryptography.X509Certificates;
 
 namespace FinancistoAdapter;
 
+[DebuggerDisplay("\"{Key}\": \"{Value}\"")]
 public class Line
 {
 	public Line(string rawLine)
