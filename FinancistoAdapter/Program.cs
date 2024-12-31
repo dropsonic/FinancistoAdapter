@@ -58,10 +58,7 @@ var payees =
     entities
         .OfType<Payee>()
         .ToArray();
-var categories =
-    entities
-        .OfType<Category>()
-        .ToArray();
+var categories = BuildCategoryTree(entities.OfType<Category>());
 var projects =
     entities
         .OfType<Project>()
@@ -105,6 +102,7 @@ using (var file = File.Create(outputFileName))
             csv.WriteField("Account");
             csv.WriteField("Currency");
             csv.WriteField("Amount");
+            csv.WriteField("RootCategory");
             csv.WriteField("Category");
             csv.WriteField("Payee");
             csv.WriteField("Project");
@@ -118,7 +116,8 @@ using (var file = File.Create(outputFileName))
                 csv.WriteField(tran.From?.Title);
                 csv.WriteField(tran.From?.Currency.Name);
                 csv.WriteField(tran.FromAmount?.ToString("0.00"));
-                csv.WriteField(tran.Category?.Title);
+                csv.WriteField(GetRootCategory(tran.Category)?.Title);
+                csv.WriteField(GetCategoryPath(tran.Category));
                 csv.WriteField(tran.Payee?.Title);
                 csv.WriteField(tran.Project?.Title);
                 csv.WriteField(tran.Note);
@@ -131,3 +130,60 @@ using (var file = File.Create(outputFileName))
 
 Console.WriteLine();
 Console.WriteLine("Done!");
+
+
+static List<Category> BuildCategoryTree(IEnumerable<Category> categories)
+{
+    var roots = new List<Category>();
+    var stack = new Stack<Category>();
+
+    foreach (var category in categories.OrderBy(c => c.Left))
+    {
+        while (stack.Count > 0 && (category.Left > stack.Peek().Right))
+        {
+            stack.Pop(); // Remove non-eligible parent nodes
+        }
+
+        if (stack.Count > 0)
+        {
+            var parent = stack.Peek();
+            category.Parent = parent;
+            parent.Children.Add(category);
+        }
+        else
+        {
+            roots.Add(category); // No parent found; it's a root
+        }
+
+        stack.Push(category);
+    }
+
+    return roots; // Return the list of root categories
+}
+
+Category GetRootCategory(Category category)
+{
+    if (category == null) return null;
+    
+    while (category.Parent != null)
+    {
+        category = category.Parent;
+    }
+
+    return category;
+}
+
+static string GetCategoryPath(Category category)
+{
+    if (category == null) return null;
+    
+    var strBld = new StringBuilder(category.Title);
+
+    while (category.Parent != null)
+    {
+        category = category.Parent;
+        strBld.Insert(0, category.Title + " -> ");
+    }
+    
+    return strBld.ToString();
+}
