@@ -108,6 +108,9 @@ using (var file = File.Create(outputFileName))
             csv.WriteField("Project");
             csv.WriteField("Note");
             csv.WriteField("Shared Expense");
+            csv.WriteField("TransactionId");
+            csv.WriteField("ParentTransactionId");
+            csv.WriteField("ParentNote");
             csv.NextRecord();
 
             foreach (var tran in transactions)
@@ -122,6 +125,9 @@ using (var file = File.Create(outputFileName))
                 csv.WriteField(tran.Project?.Title);
                 csv.WriteField(tran.Note);
                 csv.WriteField(sharedExpenseMap.TryGetValue(tran, out var value) && value);
+                csv.WriteField(tran.Id);
+                csv.WriteField(tran.Parent?.Id);
+                csv.WriteField(tran.Parent?.Note);
                 csv.NextRecord();
             }
         }
