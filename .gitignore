@@ -251,3 +251,8 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+
+# Local files
+.DS_Store
+/out/
+/tests/
