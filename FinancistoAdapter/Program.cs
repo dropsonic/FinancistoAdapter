@@ -59,6 +59,19 @@ var payees =
         .OfType<Payee>()
         .ToArray();
 var categories = BuildCategoryTree(entities.OfType<Category>());
+// Split parents have only the synthetic Split category. Use their parts instead.
+var splitCategoryMap = entities
+    .OfType<Transaction>()
+    .Where(t => t.Parent != null)
+    .GroupBy(t => t.Parent)
+    .ToDictionary(
+        group => group.Key,
+        group => string.Join("; ", group
+            .OrderBy(t => t.Id)
+            .Select(t => t.Category)
+            .Where(c => c != null && c != Category.Split && !IsDebtCategory(c))
+            .Select(GetCategoryPath)
+            .Distinct()));
 var projects =
     entities
         .OfType<Project>()
@@ -124,7 +137,9 @@ using (var file = File.Create(outputFileName))
                 csv.WriteField(tran.Project?.Title);
                 csv.WriteField(tran.Note);
                 csv.WriteField(sharedExpenseMap.TryGetValue(tran, out var value) && value);
-                csv.WriteField(GetCategoryPath(tran.Parent?.Category));
+                csv.WriteField(tran.Parent != null && splitCategoryMap.TryGetValue(tran.Parent, out var parentCategory)
+                    ? parentCategory
+                    : null);
                 csv.WriteField(tran.Parent?.Note);
                 csv.NextRecord();
             }
@@ -175,6 +190,17 @@ Category GetRootCategory(Category category)
     }
 
     return category;
+}
+
+static bool IsDebtCategory(Category category)
+{
+    for (var current = category; current != null; current = current.Parent)
+    {
+        if (string.Equals(current.Title, "В долг", StringComparison.OrdinalIgnoreCase))
+            return true;
+    }
+
+    return false;
 }
 
 static string GetCategoryPath(Category category)
